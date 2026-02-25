@@ -39,11 +39,11 @@ claude-governance/
 
 | 级别 | 类型 | 适用场景 | 工作流程 |
 |:----:|------|----------|----------|
-| **Docs** | Docs / Trivial Changes | 仅修改文档或注释，不改变代码运行行为 | Edit → Preview |
+| **docs** | Docs / Trivial Changes | 仅修改文档或注释，不改变代码运行行为 | Edit → Preview |
 | **fix** | Tiny / Controlled Changes | 小 bug 修复、typo 修复、单文件逻辑修正 | explore → doc-gen → execute |
 | **feat** | Full Feature Changes | 新功能开发、接口变更、依赖变更、架构调整 | explore → design → doc-gen → execute |
 
-**Docs 判定条件**（需全部满足）：
+**docs 判定条件**（需全部满足）：
 - 仅修改文档或注释
 - 不改变代码运行行为
 - 不改变公共接口
@@ -102,7 +102,7 @@ claude-governance/
 
 ## 工作流程详解
 
-### Docs - 文档变更
+### docs - 文档变更
 
 ```
 直接修改 → 预览效果 → 提交变更
