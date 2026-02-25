@@ -1,104 +1,120 @@
 ---
 name: execute
-description: 执行 L2 或 L3 的指定任务。L1 禁用。未按验收与记录流程完成不视为完成。
+description: 执行器。根据参数类型执行 L2 Change 或 L3 Task。L1 禁用。
 ---
 
-# 执行任务（L2 / L3）
+# 执行器（Execute）
 
-用途：  
-执行已定义的 L2 Change 或 L3 Task。
+本技能用于执行已定义的 L2 Change 或 L3 Task。
+
+---
+
+## 用法
+
+```
+/execute l2 <file>       # 执行 L2 Change Record
+/execute l3 <task-id>    # 执行 L3 Task
+```
+
+**L1 禁用：** L1 变更无需使用此技能。
 
 ---
 
 ## Workflow Gate（适用范围）
 
-执行前必须确认变更分级：
+执行前必须确认变更级别：
 
-- L1 — Docs / Trivial Changes  
-  禁止使用本 skill。  
-
-- L2 — Tiny / Controlled Changes  
-  必须基于 docs/changes/YYYY-MM-DD-<topic>.md 执行。  
-
-- L3 — Full Feature Changes  
-  必须基于 docs/tasks/<feature>.tasks.md 执行。  
+| 级别 | 处理方式 |
+|------|----------|
+| L1 | 禁止使用本技能 |
+| L2 | 必须基于 `docs/changes/YYYY-MM-DD-<topic>.md` |
+| L3 | 必须基于 `docs/tasks/<feature>.tasks.md` |
 
 若无法定位对应 Change 或 Task，禁止继续实现。
 
 ---
 
-## 输入
+## L2 执行流程
 
-- L2：Change 文件路径  
-- L3：Task 编号 + feature 名称（或 tasks 文件路径）
+### 输入格式
 
----
+```
+/execute l2 docs/changes/YYYY-MM-DD-<topic>.md
+```
 
-# L2 执行流程（Tiny Change）
+### 执行步骤
 
-1. 打开对应 docs/changes/<file>.md
-2. 定位：
-   - Scope
-   - Acceptance
-   - Execution Record 区块
-3. 若缺少 Acceptance 或 Execution Record 区块 → 停止
+1. **打开 Change Record**
+   - 读取 `docs/changes/<file>.md`
+   - 定位：Scope、Acceptance、Execution Record 区块
+   - 若缺少任一区块 → 停止
 
----
+2. **执行变更**
+   - 严格按照 Scope 修改代码
+   - 禁止修改未声明模块
+   - 禁止新增依赖
+   - 禁止修改接口或默认值
+   - 禁止顺手重构
 
-## L2 执行规则
+3. **运行验收**
+   - 运行 Acceptance 中的全部命令
 
-1. 严格按 Scope 修改代码。
-2. 禁止修改未声明模块。
-3. 禁止新增依赖。
-4. 禁止修改接口或默认值。
-5. 禁止顺手重构。
-6. 禁止修改 docs/spec/、docs/tasks/ 目录（治理文档受保护）。
+4. **更新记录**
+   - 将以下内容写入 Change 文件中的 Execution Record：
+     - Commands Run
+     - Result（PASS / FAIL）
+     - Output Summary
+   - 若 Result 为 FAIL，必须记录原因
 
----
+### L2 禁止操作
 
-## L2 执行步骤
-
-1. 实现变更。
-2. 运行 Acceptance 中的全部命令。
-3. 将以下内容写入 Change 文件中的 Execution Record：
-   - Commands Run
-   - Result（PASS / FAIL）
-   - Output Summary
-4. 若 Result 为 FAIL，必须记录原因。
-
----
-
-# L3 执行流程（Full Task）
-
-1. 打开 docs/tasks/<feature>.tasks.md
-2. 定位指定 Task 区块：
-   - Scope
-   - Acceptance
-   - Execution Record
-3. 若不存在 → 停止
+- 修改治理文档（docs/spec/、docs/tasks/）
+- 超出 Scope 的修改
+- 新增或修改依赖
 
 ---
 
-## L3 执行规则
+## L3 执行流程
 
-1. 只实现指定 Task。
-2. 严格按照 Scope 修改代码。
-3. 禁止提前实现后续 Tasks。
-4. 不修改依赖文件（除非 Task 明确允许）。
-5. 禁止顺手重构。
+### 输入格式
 
----
+```
+/execute l3 <feature>:<task-number>
+例如：/execute l3 governance-decoupling:1
+```
 
-## L3 执行步骤
+### 执行步骤
 
-1. 实现代码。
-2. 补充或更新测试。
-3. 运行 Acceptance 中的所有命令。
-4. 写入 Execution Record：
-   - Commands Run
-   - Result
-   - Output Summary
-5. 更新 Execution Timeline 表格。
+1. **打开 Tasks 文件**
+   - 读取 `docs/tasks/<feature>.tasks.md`
+   - 定位指定 Task 区块：Scope、Acceptance、Execution Record
+   - 若不存在 → 停止
+
+2. **执行变更**
+   - 只实现指定 Task
+   - 严格按照 Scope 修改代码
+   - 禁止提前实现后续 Tasks
+   - 不修改依赖文件（除非 Task 明确允许）
+   - 禁止顺手重构
+
+3. **补充测试**
+   - 补充或更新测试
+
+4. **运行验收**
+   - 运行 Acceptance 中的所有命令
+
+5. **更新记录**
+   - 写入 Execution Record：
+     - Commands Run
+     - Result
+     - Output Summary
+   - 更新 Execution Timeline 表格
+
+### L3 禁止操作
+
+- 超出 Scope 的修改
+- 提前实现后续 Tasks
+- 顺手重构
 
 ---
 
@@ -112,13 +128,13 @@ description: 执行 L2 或 L3 的指定任务。L1 禁用。未按验收与记�
 
 ## 完成定义（Definition of Done）
 
-L2：
+### L2
 
 - 代码完成
 - Acceptance 全部执行
 - Change 文件 Execution Record 已更新
 
-L3：
+### L3
 
 - 代码完成
 - 测试更新
@@ -126,4 +142,4 @@ L3：
 - Task Execution Record 已写入
 - Timeline 已更新
 
-未写入 Execution Record 不视为完成。
+**未写入 Execution Record 不视为完成。**

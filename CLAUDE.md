@@ -1,45 +1,93 @@
 # 默认工作流（Workflow）
 
-- 所有回复在在保证专业的前提下尽可能使用中文回复。
+- 所有回复在保证专业的前提下尽可能使用中文回复。
 - 所有变更在进入默认工作流前，必须先进行变更分级。
 
-变更分级规则：
+---
 
-L1 — Docs / Trivial Changes  
-L2 — Tiny / Controlled Changes  
-L3 — Full Feature Changes  
+## 强制前置检查（Guards）
 
-L2 必须执行：
+**重要：** 在处理任何请求前，必须执行以下检查。
 
-Change -> Execute
+### 第一层：请求入口检查
 
-L3 必须执行完整流程：
+收到用户输入时，立即检查：
 
-Plan → Spec → Tasks → Execute
+1. **检查是否涉及受保护目录**
+   - 用户输入是否包含 `docs/spec/`、`docs/tasks/`、`docs/changes/`
+   - 是否明确表达修改、创建、删除这些目录的意图
+
+2. **如果涉及受保护目录**
+   ```
+   "检测到操作受保护目录（docs/spec/、docs/tasks/、docs/changes/）。
+
+   治理文档必须通过 L2/L3 流程操作。
+
+   请使用：
+   - /classify <你的需求> — 判断变更级别
+   - /l2 <你的需求> — L2 变更
+   - /l3 <你的需求> — L3 变更"
+   ```
+
+3. **如果不涉及**
+   - 继续正常处理
+
+### 受保护目录（全局生效）
+
+以下目录在任何项目中都受保护：
+
+| 目录 | 说明 | 创建权限 | 更新权限 | 删除权限 |
+|------|------|----------|----------|----------|
+| `docs/spec/` | 设计基准 | L3 | 禁止 | 禁止 |
+| `docs/tasks/` | 执行记录 | L3 | execute (ER) | 禁止 |
+| `docs/changes/` | 变更历史 | L2 | execute (ER) | 禁止 |
+
+**注：** ER = Execution Record（执行记录）
+
+**规则：**
+- ❌ 用户直接创建、修改、删除
+- ✅ L2/L3 流程创建
+- ✅ execute 更新 Execution Record
 
 ---
 
 ## 变更分级入口规则（Entry Gate）
 
-- **L1** — 直接对话，无需调用技能
-- **L2** — 必须使用 `/brainstorming` 技能作为入口
-- **L3** — 必须使用 `/brainstorming` 技能作为入口
+**第一步：使用 `/classify <需求描述>` 判断变更级别**
+
+```
+用户需求
+    ↓
+/classify <需求描述>
+    ↓
+┌─────────┬──────────┬─────────────────────────────────┐
+│   L1    │    L2    │            L3                   │
+├─────────┼──────────┼─────────────────────────────────┤
+│直接对话  │ /l2      │ /l3                            │
+│         │   ↓      │   ↓                           │
+│         │ /explore │ /explore → /design             │
+│         │   ↓      │   ↓                           │
+│         │ /doc-gen │ /doc-gen → /doc-gen           │
+│         │   ↓      │   ↓                           │
+│         │ /execute │ /execute                      │
+└─────────┴──────────┴─────────────────────────────────┘
+```
 
 **禁止在直接对话模式下执行 L2/L3 变更。**
 
 如果用户在直接对话中提出 L2/L3 需求，必须拒绝执行并引导用户：
 
 ```
-这是一个 L2/L3 变更。请使用 /brainstorming <需求描述> 启动标准流程。
+这是一个 L2/L3 变更。请使用 /classify <需求描述> 判断变更级别。
 ```
 
 ---
 
-## 变更分级说明（Workflow Gate）
+## 变更级别说明
 
 ### L1 — Docs / Trivial Changes
 
-满足以下全部条件即可进入 L1：
+满足以下**全部**条件：
 
 - 仅修改文档或注释（README.md、docs/guide/**、*.md、代码注释）
 - 禁止修改治理文档（docs/spec/、docs/tasks/、docs/changes/）
@@ -48,92 +96,47 @@ Plan → Spec → Tasks → Execute
 - 不改变默认值或配置语义
 - 不新增或修改依赖
 
-执行流程：
+**处理方式：** 直接对话，无需技能
 
-Edit → Preview
+**提交格式：**
 
-要求：
-
-- 不生成 Spec
-- 不生成 Tasks
-- 不生成 Execution Record
-- 提交说明必须包含：
-
+```
 docs: <summary>
 
 What:
 Why:
 Risk:
 Verify:
-
-Done 定义：
-
-- Markdown 渲染正常
-- 示例命令验证通过（如有）
+```
 
 ---
 
 ### L2 — Tiny / Controlled Changes
 
-适用于：
+满足以下**任一**条件，且**不涉及** L3 触发条件：
 
 - 小 bug 修复
 - typo 修复
 - 单文件逻辑修正
 - 内部实现优化（不改变接口与语义）
 
-执行流程：
+**处理方式：** `/l2 <需求描述>`
 
-Change → Record
+**执行流程：** explore → doc-gen:change → execute l2
 
-## 受保护目录（禁止修改）
+**产出物：** `docs/changes/YYYY-MM-DD-<topic>.md`
 
-- docs/spec/ — 设计基准，不应追溯修改
-- docs/tasks/ — 执行记录，不应追溯修改
-- docs/changes/ — 变更历史，仅可追加新文件
-
-要求：
-
-- 不生成 Spec
-- 不生成完整 Tasks
-- 必须生成 Tiny Change Record
-
-记录路径：
-
-docs/changes/YYYYMMDD-<topic>.md
-
-记录模板：
-
-# Change: <title>
-
-Date:
-Owner:
-
-Scope:
-- files:
-
-Behavior Impact:
-- none / minimal
-
-Acceptance:
-- <command>
-
-Result:
-PASS / FAIL
-
-Output Summary:
-
-Done 定义：
-
-- 代码完成
-- 验收命令执行通过
-- 记录文件存在
+**边界约束：**
+- 不改变公共接口（API/CLI/配置项对外契约）
+- 不改变默认值或配置语义
+- 不新增或升级依赖
+- 不涉及跨模块架构调整
 
 ---
 
 ### L3 — Full Feature Changes
 
-触发条件（命中任意一条必须走 L3）：
+满足以下**任一**条件：
 
 - 新功能开发
 - 公共接口变更
@@ -143,81 +146,126 @@ Done 定义：
 - 架构调整
 - 安全 / 加密 / 账务相关变更
 
-执行流程：
+**处理方式：** `/l3 <需求描述>`
 
-Plan → Spec → Tasks → Execute
+**执行流程：** explore → design → doc-gen:spec/tasks → execute l3
 
----
-
-## 1. Spec 阶段
-
-使用 Plan 模式生成：
-
-docs/spec/<feature>.spec.md
-
-要求：
-
-- 明确目标与非目标
-- 描述设计方案
-- 定义接口与数据结构
-- 列出边界情况
-- 提供全局验证方案（Validation Plan）
-
-限制：
-
-- Spec 阶段禁止生成实现代码
-- 禁止拆解 Tasks
-- Spec 文件按功能独立创建，禁止覆盖或合并既有 Spec
+**产出物：**
+- `docs/plans/YYYY-MM-DD-<topic>-design.md`
+- `docs/spec/<feature>.spec.md`
+- `docs/tasks/<feature>.tasks.md`
 
 ---
 
-## 2. Tasks 阶段
+## 操作执行检查（Execution Guards）
 
-基于 Spec 生成：
+**第二层检查：在 Edit/Write 操作前**
 
-docs/tasks/<feature>.tasks.md
+在准备执行 Edit 或 Write 操作时，必须检查目标文件路径。
 
-要求：
+### 检查规则
 
-- 拆分为多个可独立完成的任务
-- 每个任务粒度 1–3 小时
-- 每个任务必须包含可执行验收命令（Acceptance）
-- Acceptance 必须为可直接执行的命令
-- 最后一个 Task 必须包含全量回归验证命令
-- Tasks 文件与 Spec 一一对应，禁止复用或覆盖其他功能 Tasks
+1. **检查目标文件路径**
+   - 路径是否包含 `docs/spec/`
+   - 路径是否包含 `docs/tasks/`
+   - 路径是否包含 `docs/changes/`
+
+2. **如果目标路径在受保护目录**
+   ```
+   "检测到目标路径 {path} 位于受保护目录。
+
+   治理文档只能由以下方式操作：
+   - 创建：L2/L3 流程
+   - 更新：仅限 execute 更新 Execution Record
+
+   如果需要修改设计内容，请使用：
+   - /l2 <你的需求> — 补充说明
+   - /l3 <你的需求> — 设计变更
+
+   如果是执行任务，请使用：
+   - /execute l2 <file> — L2 执行
+   - /execute l3 <task-id> — L3 执行"
+   ```
+
+3. **如果目标路径不在受保护目录**
+   - 正常执行操作
+
+### 只读操作例外
+
+Read 操作不受此限制：
+- 查看受保护目录的文件是允许的
+- 不触发执行检查
 
 ---
 
-## 3. Execute 阶段
+## 受保护目录
 
-执行规则：
+以下目录在任何项目中都受保护：
 
-- 一次只允许实现一个 Task
-- 严格按照 Scope 修改代码
-- 禁止提前实现未执行的 Tasks
-- 完成后必须运行 Acceptance 命令
-- 必须在 Tasks 文档中记录 PASS / FAIL 结果
+### 生命周期规则
+
+| 目录 | 说明 | 创建权限 | 更新权限 | 删除权限 |
+|------|------|----------|----------|----------|
+| `docs/spec/` | 设计基准 | L3 流程 | 禁止 | 禁止 |
+| `docs/tasks/` | 执行记录 | L3 流程 | execute (ER) | 禁止 |
+| `docs/changes/` | 变更历史 | L2 流程 | execute (ER) | 禁止 |
+
+**注：** ER = Execution Record（执行记录）
+
+### 规则说明
+
+**❌ 禁止操作：**
+- 用户直接创建、修改、删除受保护目录的文件
+
+**✅ L2/L3 创建：**
+- 只能由 L2/L3 流程通过 doc-gen 创建
+- L2 创建 docs/changes/
+- L3 创建 docs/spec/ 和 docs/tasks/
+
+**✅ execute 更新：**
+- 只能由 execute 更新 Execution Record
+- 更新 docs/tasks/ 和 docs/changes/ 中的 Execution Record
+
+**✅ 读取不受限：**
+- Read 操作不受限制
 
 ---
 
-## 4. 变更护栏
+## 技能系统
 
-默认禁止：
+### 入口层
+- `/classify` — 分级判断 + 路由提示
+- `/l1` — L1 约束说明
 
-- 大范围重构（除非 Spec 明确要求）
-- 修改依赖文件（go.mod / package.json 等）
-- 修改公共接口而不更新测试
+### 编排层
+- `/l2` — L2 流程编排
+- `/l3` — L3 流程编排
+
+### 核心技能层
+- `/explore` — 需求探索与澄清
+- `/design` — 设计方案讨论
+- `/doc-gen` — 文档生成器（change/spec/tasks/design）
+
+### 执行层
+- `/execute l2 <file>` — 执行 L2 Change
+- `/execute l3 <task-id>` — 执行 L3 Task
 
 ---
 
 ## Task 完成定义（Definition of Done）
 
-L3 定义：
+### L2
 
 - 代码完成
-- 测试补充或更新
-- 验收命令已执行
-- 结果已记录
-- 每个 Task 完成后必须填写 Execution Record（包含 Commands Run、Result、Output Summary）
-- 未填写 Execution Record 不视为完成
-- 建议在 tasks 文件顶部维护 Execution Timeline 表格，并在每次 Task 完成后更新对应行
+- Acceptance 全部执行
+- Change 文件 Execution Record 已更新
+
+### L3
+
+- 代码完成
+- 测试更新
+- Acceptance 全部执行
+- Task Execution Record 已写入
+- Timeline 已更新
+
+**未填写 Execution Record 不视为完成。**

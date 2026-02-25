@@ -10,21 +10,24 @@ Claude 技能导向治理框架 - 统一配置与工作流管理，实现可预�
 - **可审计性** - 每个变更都有完整的执行记录和追溯链
 - **可扩展性** - 技能体系支持灵活的职责分工
 
+---
+
 ## 目录结构
 
 ```
 claude-governance/
-├── .gitignore              # 反向忽略模式：仅跟踪治理框架文件
-├── CLAUDE.md               # 项目级执行宪法（工作流与变更规范）
+├── CLAUDE.md               # 全局执行宪法（工作流与变更规范）
 ├── README.md               # 本文档
 └── skills/                 # 技能定义目录
-    ├── brainstorming/      # 需求探索与设计生成技能
-    │   ├── SKILL.md        # 头脑风暴技能核心定义
-    │   ├── changes.md      # L2 变更记录模板
-    │   ├── spec.md         # L3 规格说明模板
-    │   └── tasks.md        # L3 任务分解模板
-    └── execute/            # 任务执行技能
-        └── SKILL.md        # 执行技能核心定义
+    ├── classify/           # 变更分级判断技能
+    ├── explore/            # 需求探索与澄清技能
+    ├── design/             # 设计方案讨论技能
+    ├── doc-gen/            # 文档生成器技能
+    ├── execute/            # 执行器技能
+    ├── commit/             # Git 提交技能
+    ├── l1/                 # L1 约束说明技能
+    ├── l2/                 # L2 流程编排技能
+    └── l3/                 # L3 流程编排技能
 ```
 
 ---
@@ -38,8 +41,8 @@ claude-governance/
 | 级别 | 类型 | 适用场景 | 工作流程 |
 |:----:|------|----------|----------|
 | **L1** | Docs / Trivial Changes | 仅修改文档或注释，不改变代码运行行为 | Edit → Preview |
-| **L2** | Tiny / Controlled Changes | 小 bug 修复、typo 修复、单文件逻辑修正 | Change → Acceptance → Record |
-| **L3** | Full Feature Changes | 新功能开发、接口变更、依赖变更、架构调整 | Plan → Spec → Tasks → Execute |
+| **L2** | Tiny / Controlled Changes | 小 bug 修复、typo 修复、单文件逻辑修正 | explore → doc-gen → execute |
+| **L3** | Full Feature Changes | 新功能开发、接口变更、依赖变更、架构调整 | explore → design → doc-gen → execute |
 
 **L1 判定条件**（需全部满足）：
 - 仅修改文档或注释
@@ -47,6 +50,13 @@ claude-governance/
 - 不改变公共接口
 - 不改变默认值或配置语义
 - 不新增或修改依赖
+- 不修改治理文档（docs/spec/、docs/tasks/、docs/changes/）
+
+**L2 适用范围**（满足任一条件，且不涉及 L3）：
+- 小 bug 修复
+- typo 修复
+- 单文件逻辑修正
+- 内部实现优化（不改变接口与语义）
 
 **L3 触发条件**（命中任意一条）：
 - 新功能开发
@@ -57,12 +67,38 @@ claude-governance/
 - 架构调整
 - 安全/加密/账务相关变更
 
-### 技能体系
+---
 
-| 技能 | 调用方式 | 职责 | 适用范围 |
-|------|----------|------|----------|
-| **brainstorming** | `/brainstorming <需求>` | 需求探索、设计确认、生成 Spec 与 Tasks | L2、L3 |
-| **execute** | `/execute <task-id>` | 执行 L2 或 L3 的指定任务 | L2、L3 |
+## 技能体系
+
+### 入口层
+
+| 技能 | 调用方式 | 职责 |
+|------|----------|------|
+| **classify** | `/classify <需求>` | 判断变更级别，路由到对应流程 |
+| **l1** | `/l1` | 显示 L1 约束说明 |
+
+### 编排层
+
+| 技能 | 调用方式 | 职责 |
+|------|----------|------|
+| **l2** | `/l2 <需求>` | L2 流程编排（explore → doc-gen） |
+| **l3** | `/l3 <需求>` | L3 流程编排（explore → design → doc-gen） |
+
+### 核心技能层
+
+| 技能 | 调用方式 | 职责 |
+|------|----------|------|
+| **explore** | `/explore <需求>` | 需求探索与澄清 |
+| **design** | `/design` | 设计方案讨论 |
+| **doc-gen** | `/doc-gen <type>` | 生成治理文档 |
+| **commit** | `/commit` | 自动生成提交信息 |
+
+### 执行层
+
+| 技能 | 调用方式 | 职责 |
+|------|----------|------|
+| **execute** | `/execute l2 <file>` / `/execute l3 <task-id>` | 执行 L2 Change 或 L3 Task |
 
 ---
 
@@ -71,13 +107,13 @@ claude-governance/
 ### L1 - 文档变更
 
 ```
-修改文档 → 预览效果 → 提交变更
+直接修改 → 预览效果 → 提交变更
 ```
 
 **执行流程**：
 1. 直接修改文档或注释
-2. 预览变更效果（确保 Markdown 渲染正常）
-3. 提交变更（commit 说明包含 `docs:` 前缀）
+2. 预览变更效果
+3. 提交变更（使用 `/commit` 或手动提交）
 
 **完成定义**：
 - Markdown 渲染正常
@@ -88,38 +124,41 @@ claude-governance/
 ### L2 - 小变更
 
 ```
-/brainstorming → 生成 Change Record → /execute → 运行验收 → 记录结果
+/l2 → /explore → /doc-gen change → /execute l2 → 验收 → 记录
 ```
 
 **执行流程**：
-1. 使用 `/brainstorming <变更描述>` 生成变更记录
-2. 使用 `/execute <change-file>` 执行变更
-3. 运行验收命令
-4. 记录执行结果
+1. 使用 `/l2 <变更描述>` 启动流程
+2. 执行需求探索（`/explore`）
+3. 生成 Change Record（`/doc-gen change`）
+4. 执行变更（`/execute l2 <file>`）
+5. 运行验收命令
+6. 记录执行结果
 
 **输出文件**：
-- `docs/changes/YYYYMMDD-<topic>.md`
+- `docs/changes/YYYY-MM-DD-<topic>.md`
 
 **完成定义**：
 - 代码完成
-- 验收命令执行通过
-- 变更记录文件存在且已更新执行结果
+- Acceptance 全部执行
+- Execution Record 已更新
 
 ---
 
 ### L3 - 功能变更
 
 ```
-/brainstorming → 设计探索 → Spec → Tasks → /execute 1 → /execute 2 → ... → 回归验证
+/l3 → /explore → /design → /doc-gen spec → /doc-gen tasks → /execute l3
 ```
 
 **执行流程**：
-1. 使用 `/brainstorming <功能需求>` 进行设计探索
-2. 生成设计文档（可选）、Spec 和 Tasks
-3. 使用 `/execute <task-number>` 按任务顺序逐个执行
-4. 每个任务完成后运行验收命令并记录结果
-5. 最后执行全量回归验证
-6. 更新执行时间线
+1. 使用 `/l3 <功能需求>` 启动流程
+2. 执行需求探索（`/explore`）
+3. 进行设计方案讨论（`/design`）
+4. 生成 Spec（`/doc-gen spec`）
+5. 生成 Tasks（`/doc-gen tasks`）
+6. 按任务顺序执行（`/execute l3 <task-id>`）
+7. 更新执行时间线
 
 **输出文件**：
 - `docs/plans/YYYY-MM-DD-<topic>-design.md`（可选）
@@ -128,10 +167,29 @@ claude-governance/
 
 **完成定义**：
 - 代码完成
-- 测试补充或更新
-- 所有验收命令已执行
-- 每个 Task 的 Execution Record 已填写
+- 测试更新
+- Acceptance 全部执行
+- Task Execution Record 已填写
 - Timeline 已更新
+
+---
+
+## 受保护目录
+
+以下目录受治理框架保护：
+
+| 目录 | 说明 | 创建权限 | 更新权限 | 删除权限 |
+|------|------|----------|----------|----------|
+| `docs/spec/` | 设计基准 | L3 流程 | 禁止 | 禁止 |
+| `docs/tasks/` | 执行记录 | L3 流程 | execute (ER) | 禁止 |
+| `docs/changes/` | 变更历史 | L2 流程 | execute (ER) | 禁止 |
+
+**注：** ER = Execution Record（执行记录）
+
+**规则**：
+- ❌ 用户直接创建、修改、删除
+- ✅ L2/L3 流程创建
+- ✅ execute 更新 Execution Record
 
 ---
 
@@ -167,73 +225,41 @@ your-project/
 
 ---
 
-## 技能使用指南
+## 典型使用场景
 
-### Brainstorming 技能
+### 场景 1：修复一个小 bug
 
-**用途**：在任何功能开发前必须使用。负责需求探索、设计确认、生成 Spec 与 Tasks。未经设计批准禁止进入实现。
+```bash
+# 1. 判断变更级别
+/classify 修复登录页面验证逻辑错误
 
-**调用方式**：
-```
-/brainstorming <需求描述>
-```
+# 2. 如果是 L2，启动 L2 流程
+/l2 修复登录页面验证逻辑错误
 
-**工作流程**：
-
-**L2（小变更）**：
-1. 澄清变更动机、影响范围、成功标准
-2. 生成 `docs/changes/YYYYMMDD-<topic>.md`
-3. 提示进入 `/execute`
-
-**L3（功能变更）**：
-1. 探索项目结构与上下文
-2. 提出设计方案（2-3 个方案 + trade-offs）
-3. 设计批准后生成 Spec
-4. 基于 Spec 生成 Tasks
-5. 提示使用 `/execute 1` 开始执行
-
-**注意**：
-- Spec 阶段禁止生成实现代码
-- 禁止提前拆解 Tasks
-
----
-
-### Execute 技能
-
-**用途**：执行 L2 或 L3 的指定任务。
-
-**调用方式**：
-```
-/execute <task-identifier>
+# 3. 按流程执行，最后
+/execute l2 docs/changes/2026-02-25-fix-login-validation.md
 ```
 
-**输入**：
-- L2：Change 文件路径（如 `docs/changes/20250225-fix-bug.md`）
-- L3：Task 编号（如 `1`）+ feature 名称（或 tasks 文件路径）
+### 场景 2：新增一个功能
 
-**执行规则**：
-- 严格按 Scope 修改代码
-- 禁止提前实现未执行的任务
-- L3 禁止顺手重构
-- 必须运行验收命令并记录结果
+```bash
+# 1. 判断变更级别
+/classify 新增用户导出功能
 
-**执行步骤**：
-1. 读取任务定义
-2. 实现代码
-3. 补充或更新测试（L3）
-4. 运行验收命令
-5. 记录执行结果（Commands Run、Result、Output Summary）
-6. 更新时间线（L3）
+# 2. 如果是 L3，启动 L3 流程
+/l3 新增用户导出功能
 
----
+# 3. 按流程执行，最后
+/execute l3 user-export:1
+```
 
-## 变更护栏
+### 场景 3：修改文档
 
-默认禁止的行为：
-- 大范围重构（除非 Spec 明确要求）
-- 修改依赖文件（go.mod / package.json 等）
-- 修改公共接口而不更新测试
-- L1 变更使用 brainstorming 或 execute 技能
+```bash
+# 直接修改，无需技能
+# 修改完成后使用 /commit 提交
+/commit
+```
 
 ---
 
@@ -251,10 +277,6 @@ your-project/
 
 MIT License
 
-## 贡献
-
-欢迎提交 Issue 和 Pull Request。
-
 ---
 
-**Location**: `~/.claude/` | **Version**: 2.0
+**Location**: `~/.claude/` | **Version**: 3.0
