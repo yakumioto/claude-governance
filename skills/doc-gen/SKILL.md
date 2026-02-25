@@ -16,9 +16,9 @@ description: 文档生成器。根据类型生成 Change Record、Spec、Tasks �
 ```
 
 **类型（type）：**
-- `change` - 生成 L2 Change Record
-- `spec` - 生成 L3 Spec
-- `tasks` - 生成 L3 Tasks
+- `change` - 生成 fix Change Record
+- `spec` - 生成 feat Spec
+- `tasks` - 生成 feat Tasks
 - `design` - 生成设计文档
 
 ---
@@ -83,6 +83,23 @@ skills/doc-gen/templates/
 4. **返回结果**
    - 输出文件路径
    - 提示下一步操作
+
+---
+
+## 格式规则（重要）
+
+**所有文档类型必须严格按照模板格式生成：**
+
+- 禁止简化模板结构
+- 保持模板的所有章节和标题层级
+- 保持模板的表格格式
+- 保持模板的列表格式
+- 禁止自行修改模板格式
+
+**示例：**
+- 如果模板使用 `### 标题`，生成时也必须使用 `###`
+- 如果模板使用表格，生成时也必须使用表格
+- 如果模板有 Notes 字段，生成时也必须保留
 
 ---
 

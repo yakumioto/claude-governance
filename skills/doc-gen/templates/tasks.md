@@ -1,12 +1,17 @@
 # <功能名> 任务拆解（Tasks）
 
-## Execution Timeline（执行时间线）
+**相关 Spec：** `docs/spec/<feature>.spec.md`
+**创建日期:** {{date}}
 
-| Task | Date | Result | Summary |
-|------|------|--------|---------|
-| 1 | - | - | - |
-| 2 | - | - | - |
-| 3 | - | - | - |
+---
+
+## Execution Timeline
+
+| Task ID | 状态 | 执行者 | 完成日期 |
+|---------|------|--------|---------|
+| 1 | pending | - | - |
+| 2 | pending | - | - |
+| 3 | pending | - | - |
 
 ---
 

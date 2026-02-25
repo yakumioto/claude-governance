@@ -1,8 +1,6 @@
 # Design: {{title}}
 
-**Date:** {{date}}
-**Status:** Draft
-**Owner:** {{owner}}
+**创建日期:** {{date}}
 
 ---
 

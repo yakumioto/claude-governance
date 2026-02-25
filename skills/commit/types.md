@@ -38,7 +38,7 @@ feat(api): 添加用户认证接口
 **示例**：
 ```
 fix(skills): 修复 scope 推断逻辑错误
-fix(governance): 修复 L2 变更流程漏洞
+fix(governance): 修复 fix 变更流程漏洞
 ```
 
 ---
@@ -56,7 +56,7 @@ fix(governance): 修复 L2 变更流程漏洞
 **示例**：
 ```
 docs: 更新 README 文档结构
-docs(governance): 补充 L3 流程说明
+docs(governance): 补充 feat 流程说明
 docs(skills): 更新 brainstorming 技能文档
 ```
 
@@ -191,7 +191,7 @@ docs: 更新项目说明文档
 ```
 
 ### 示例 3：修复 Bug
-改动：`execute/SKILL.md` 中的 L3 执行逻辑修复
+改动：`execute/SKILL.md` 中的 feat 执行逻辑修复
 ```
 fix(execute): 修复 Task 执行顺序错误
 ```

@@ -1,7 +1,6 @@
 # Change: {{title}}
 
-**Date:** {{date}}
-**Owner:** {{owner}}
+**创建日期:** {{date}}
 
 ---
 

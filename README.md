@@ -19,7 +19,6 @@ claude-governance/
 ├── CLAUDE.md               # 全局执行宪法（工作流与变更规范）
 ├── README.md               # 本文档
 └── skills/                 # 技能定义目录
-    ├── classify/           # 变更分级判断技能
     ├── explore/            # 需求探索与澄清技能
     ├── design/             # 设计方案讨论技能
     ├── doc-gen/            # 文档生成器技能
@@ -75,7 +74,6 @@ claude-governance/
 
 | 技能 | 调用方式 | 职责 |
 |------|----------|------|
-| **classify** | `/classify <需求>` | 判断变更级别，路由到对应流程 |
 | **docs** | `/docs` | 显示 Docs 级别约束说明 |
 
 ### 编排层
@@ -230,26 +228,20 @@ your-project/
 ### 场景 1：修复一个小 bug
 
 ```bash
-# 1. 判断变更级别
-/classify 修复登录页面验证逻辑错误
-
-# 2. 如果是 fix，启动 fix 流程
+# 1. 启动 fix 流程
 /fix 修复登录页面验证逻辑错误
 
-# 3. 按流程执行，最后
+# 2. 按流程执行，最后
 /execute fix docs/changes/2026-02-25-fix-login-validation.md
 ```
 
 ### 场景 2：新增一个功能
 
 ```bash
-# 1. 判断变更级别
-/classify 新增用户导出功能
-
-# 2. 如果是 feat，启动 feat 流程
+# 1. 启动 feat 流程
 /feat 新增用户导出功能
 
-# 3. 按流程执行，最后
+# 2. 按流程执行，最后
 /execute feat user-export:1
 ```
 

@@ -1,6 +1,6 @@
 ---
 name: execute
-description: 执行器。根据参数类型执行 fix Change 或 feat Task。Docs 禁用。
+description: 执行器。根据参数类型执行 fix Change 或 feat Task。docs 禁用。
 ---
 
 # 执行器（Execute）
@@ -16,7 +16,7 @@ description: 执行器。根据参数类型执行 fix Change 或 feat Task。Doc
 /execute feat <task-id>    # 执行 feat Task
 ```
 
-**Docs 禁用：** Docs 级别变更无需使用此技能。
+**docs 禁用：** docs 级别变更无需使用此技能。
 
 ---
 
@@ -26,7 +26,7 @@ description: 执行器。根据参数类型执行 fix Change 或 feat Task。Doc
 
 | 级别 | 处理方式 |
 |------|----------|
-| Docs | 禁止使用本技能 |
+| docs | 禁止使用本技能 |
 | fix | 必须基于 `docs/changes/YYYY-MM-DD-<topic>.md` |
 | feat | 必须基于 `docs/tasks/<feature>.tasks.md` |
 
