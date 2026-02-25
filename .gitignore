@@ -1,0 +1,17 @@
+# 反向忽略：默认忽略所有文件
+*
+
+# 允许的例外
+!.gitignore
+!CLAUDE.md
+!README.md
+!agents/
+!policies/
+!skills/
+!docs/
+
+# 确保目录内容也被跟踪
+!agents/**
+!policies/**
+!skills/**
+!docs/**
