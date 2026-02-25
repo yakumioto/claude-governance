@@ -25,9 +25,9 @@ claude-governance/
     ├── doc-gen/            # 文档生成器技能
     ├── execute/            # 执行器技能
     ├── commit/             # Git 提交技能
-    ├── l1/                 # L1 约束说明技能
-    ├── l2/                 # L2 流程编排技能
-    └── l3/                 # L3 流程编排技能
+    ├── docs/               # Docs 级别约束说明技能
+    ├── fix/                # fix 流程编排技能
+    └── feat/               # feat 流程编排技能
 ```
 
 ---
@@ -40,11 +40,11 @@ claude-governance/
 
 | 级别 | 类型 | 适用场景 | 工作流程 |
 |:----:|------|----------|----------|
-| **L1** | Docs / Trivial Changes | 仅修改文档或注释，不改变代码运行行为 | Edit → Preview |
-| **L2** | Tiny / Controlled Changes | 小 bug 修复、typo 修复、单文件逻辑修正 | explore → doc-gen → execute |
-| **L3** | Full Feature Changes | 新功能开发、接口变更、依赖变更、架构调整 | explore → design → doc-gen → execute |
+| **Docs** | Docs / Trivial Changes | 仅修改文档或注释，不改变代码运行行为 | Edit → Preview |
+| **fix** | Tiny / Controlled Changes | 小 bug 修复、typo 修复、单文件逻辑修正 | explore → doc-gen → execute |
+| **feat** | Full Feature Changes | 新功能开发、接口变更、依赖变更、架构调整 | explore → design → doc-gen → execute |
 
-**L1 判定条件**（需全部满足）：
+**Docs 判定条件**（需全部满足）：
 - 仅修改文档或注释
 - 不改变代码运行行为
 - 不改变公共接口
@@ -52,13 +52,13 @@ claude-governance/
 - 不新增或修改依赖
 - 不修改治理文档（docs/spec/、docs/tasks/、docs/changes/）
 
-**L2 适用范围**（满足任一条件，且不涉及 L3）：
+**fix 适用范围**（满足任一条件，且不涉及 feat）：
 - 小 bug 修复
 - typo 修复
 - 单文件逻辑修正
 - 内部实现优化（不改变接口与语义）
 
-**L3 触发条件**（命中任意一条）：
+**feat 触发条件**（命中任意一条）：
 - 新功能开发
 - 公共接口变更
 - 默认值或配置语义变更
@@ -76,14 +76,14 @@ claude-governance/
 | 技能 | 调用方式 | 职责 |
 |------|----------|------|
 | **classify** | `/classify <需求>` | 判断变更级别，路由到对应流程 |
-| **l1** | `/l1` | 显示 L1 约束说明 |
+| **docs** | `/docs` | 显示 Docs 级别约束说明 |
 
 ### 编排层
 
 | 技能 | 调用方式 | 职责 |
 |------|----------|------|
-| **l2** | `/l2 <需求>` | L2 流程编排（explore → doc-gen） |
-| **l3** | `/l3 <需求>` | L3 流程编排（explore → design → doc-gen） |
+| **fix** | `/fix <需求>` | fix 流程编排（explore → doc-gen） |
+| **feat** | `/feat <需求>` | feat 流程编排（explore → design → doc-gen） |
 
 ### 核心技能层
 
@@ -98,13 +98,13 @@ claude-governance/
 
 | 技能 | 调用方式 | 职责 |
 |------|----------|------|
-| **execute** | `/execute l2 <file>` / `/execute l3 <task-id>` | 执行 L2 Change 或 L3 Task |
+| **execute** | `/execute fix <file>` / `/execute feat <task-id>` | 执行 fix Change 或 feat Task |
 
 ---
 
 ## 工作流程详解
 
-### L1 - 文档变更
+### Docs - 文档变更
 
 ```
 直接修改 → 预览效果 → 提交变更
@@ -121,17 +121,17 @@ claude-governance/
 
 ---
 
-### L2 - 小变更
+### fix - 小变更
 
 ```
-/l2 → /explore → /doc-gen change → /execute l2 → 验收 → 记录
+/fix → /explore → /doc-gen change → /execute fix → 验收 → 记录
 ```
 
 **执行流程**：
-1. 使用 `/l2 <变更描述>` 启动流程
+1. 使用 `/fix <变更描述>` 启动流程
 2. 执行需求探索（`/explore`）
 3. 生成 Change Record（`/doc-gen change`）
-4. 执行变更（`/execute l2 <file>`）
+4. 执行变更（`/execute fix <file>`）
 5. 运行验收命令
 6. 记录执行结果
 
@@ -145,19 +145,19 @@ claude-governance/
 
 ---
 
-### L3 - 功能变更
+### feat - 功能变更
 
 ```
-/l3 → /explore → /design → /doc-gen spec → /doc-gen tasks → /execute l3
+/feat → /explore → /design → /doc-gen spec → /doc-gen tasks → /execute feat
 ```
 
 **执行流程**：
-1. 使用 `/l3 <功能需求>` 启动流程
+1. 使用 `/feat <功能需求>` 启动流程
 2. 执行需求探索（`/explore`）
 3. 进行设计方案讨论（`/design`）
 4. 生成 Spec（`/doc-gen spec`）
 5. 生成 Tasks（`/doc-gen tasks`）
-6. 按任务顺序执行（`/execute l3 <task-id>`）
+6. 按任务顺序执行（`/execute feat <task-id>`）
 7. 更新执行时间线
 
 **输出文件**：
@@ -180,15 +180,15 @@ claude-governance/
 
 | 目录 | 说明 | 创建权限 | 更新权限 | 删除权限 |
 |------|------|----------|----------|----------|
-| `docs/spec/` | 设计基准 | L3 流程 | 禁止 | 禁止 |
-| `docs/tasks/` | 执行记录 | L3 流程 | execute (ER) | 禁止 |
-| `docs/changes/` | 变更历史 | L2 流程 | execute (ER) | 禁止 |
+| `docs/spec/` | 设计基准 | feat 流程 | 禁止 | 禁止 |
+| `docs/tasks/` | 执行记录 | feat 流程 | execute (ER) | 禁止 |
+| `docs/changes/` | 变更历史 | fix 流程 | execute (ER) | 禁止 |
 
 **注：** ER = Execution Record（执行记录）
 
 **规则**：
 - ❌ 用户直接创建、修改、删除
-- ✅ L2/L3 流程创建
+- ✅ fix/feat 流程创建
 - ✅ execute 更新 Execution Record
 
 ---
@@ -233,11 +233,11 @@ your-project/
 # 1. 判断变更级别
 /classify 修复登录页面验证逻辑错误
 
-# 2. 如果是 L2，启动 L2 流程
-/l2 修复登录页面验证逻辑错误
+# 2. 如果是 fix，启动 fix 流程
+/fix 修复登录页面验证逻辑错误
 
 # 3. 按流程执行，最后
-/execute l2 docs/changes/2026-02-25-fix-login-validation.md
+/execute fix docs/changes/2026-02-25-fix-login-validation.md
 ```
 
 ### 场景 2：新增一个功能
@@ -246,11 +246,11 @@ your-project/
 # 1. 判断变更级别
 /classify 新增用户导出功能
 
-# 2. 如果是 L3，启动 L3 流程
-/l3 新增用户导出功能
+# 2. 如果是 feat，启动 feat 流程
+/feat 新增用户导出功能
 
 # 3. 按流程执行，最后
-/execute l3 user-export:1
+/execute feat user-export:1
 ```
 
 ### 场景 3：修改文档
@@ -279,4 +279,4 @@ MIT License
 
 ---
 
-**Location**: `~/.claude/` | **Version**: 3.0
+**Location**: `~/.claude/` | **Version**: 3.1

@@ -1,22 +1,22 @@
 ---
 name: execute
-description: 执行器。根据参数类型执行 L2 Change 或 L3 Task。L1 禁用。
+description: 执行器。根据参数类型执行 fix Change 或 feat Task。Docs 禁用。
 ---
 
 # 执行器（Execute）
 
-本技能用于执行已定义的 L2 Change 或 L3 Task。
+本技能用于执行已定义的 fix Change 或 feat Task。
 
 ---
 
 ## 用法
 
 ```
-/execute l2 <file>       # 执行 L2 Change Record
-/execute l3 <task-id>    # 执行 L3 Task
+/execute fix <file>       # 执行 fix Change Record
+/execute feat <task-id>    # 执行 feat Task
 ```
 
-**L1 禁用：** L1 变更无需使用此技能。
+**Docs 禁用：** Docs 级别变更无需使用此技能。
 
 ---
 
@@ -26,20 +26,20 @@ description: 执行器。根据参数类型执行 L2 Change 或 L3 Task。L1 禁
 
 | 级别 | 处理方式 |
 |------|----------|
-| L1 | 禁止使用本技能 |
-| L2 | 必须基于 `docs/changes/YYYY-MM-DD-<topic>.md` |
-| L3 | 必须基于 `docs/tasks/<feature>.tasks.md` |
+| Docs | 禁止使用本技能 |
+| fix | 必须基于 `docs/changes/YYYY-MM-DD-<topic>.md` |
+| feat | 必须基于 `docs/tasks/<feature>.tasks.md` |
 
 若无法定位对应 Change 或 Task，禁止继续实现。
 
 ---
 
-## L2 执行流程
+## fix 执行流程
 
 ### 输入格式
 
 ```
-/execute l2 docs/changes/YYYY-MM-DD-<topic>.md
+/execute fix docs/changes/YYYY-MM-DD-<topic>.md
 ```
 
 ### 执行步骤
@@ -66,7 +66,7 @@ description: 执行器。根据参数类型执行 L2 Change 或 L3 Task。L1 禁
      - Output Summary
    - 若 Result 为 FAIL，必须记录原因
 
-### L2 禁止操作
+### fix 禁止操作
 
 - 修改治理文档（docs/spec/、docs/tasks/）
 - 超出 Scope 的修改
@@ -74,13 +74,13 @@ description: 执行器。根据参数类型执行 L2 Change 或 L3 Task。L1 禁
 
 ---
 
-## L3 执行流程
+## feat 执行流程
 
 ### 输入格式
 
 ```
-/execute l3 <feature>:<task-number>
-例如：/execute l3 governance-decoupling:1
+/execute feat <feature>:<task-number>
+例如：/execute feat governance-decoupling:1
 ```
 
 ### 执行步骤
@@ -110,7 +110,7 @@ description: 执行器。根据参数类型执行 L2 Change 或 L3 Task。L1 禁
      - Output Summary
    - 更新 Execution Timeline 表格
 
-### L3 禁止操作
+### feat 禁止操作
 
 - 超出 Scope 的修改
 - 提前实现后续 Tasks
@@ -128,13 +128,13 @@ description: 执行器。根据参数类型执行 L2 Change 或 L3 Task。L1 禁
 
 ## 完成定义（Definition of Done）
 
-### L2
+### fix
 
 - 代码完成
 - Acceptance 全部执行
 - Change 文件 Execution Record 已更新
 
-### L3
+### feat
 
 - 代码完成
 - 测试更新

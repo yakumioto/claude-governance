@@ -1,23 +1,23 @@
 ---
-name: l2
-description: L2 变更流程编排。执行 explore、doc-gen 生成 Change Record。
+name: fix
+description: fix 流程编排。执行 explore、doc-gen 生成 Change Record。
 ---
 
-# L2 变更流程编排（L2）
+# fix 流程编排（fix）
 
-本技能负责编排 L2 变更的完整流程。
+本技能负责编排 fix 级别变更的完整流程。
 
 ---
 
-## L2 变更适用范围
+## fix 变更适用范围
 
-L2 变更适用于：
+fix 变更适用于：
 - 小 bug 修复
 - typo 修复
 - 单文件逻辑修正
-- 内部实现优化（不改变接口与语义）
+- 内部实现优化（不改变接口和语义）
 
-### L2 边界约束
+### fix 边界约束
 
 必须满足：
 - 不改变公共接口（API/CLI/配置项对外契约）
@@ -26,7 +26,7 @@ L2 变更适用于：
 - 不涉及跨模块架构调整
 - 影响范围可在单个或少量文件内闭合
 
-若对边界存在不确定，必须升级为 L3。
+若对边界存在不确定，必须升级为 feat。
 
 ---
 
@@ -52,7 +52,7 @@ L2 变更适用于：
 - 成功标准
 - 验证方式（Acceptance 命令）
 
-若发现涉及接口/语义/依赖/架构 → 立即停止并升级为 L3。
+若发现涉及接口/语义/依赖/架构 → 立即停止并升级为 feat。
 
 ---
 
@@ -73,7 +73,7 @@ Change Record 生成后，提示用户：
 ```
 Change Record 已生成：docs/changes/YYYY-MM-DD-<topic>.md
 
-请使用 /execute l2 docs/changes/YYYY-MM-DD-<topic>.md 执行变更。
+请使用 /execute fix docs/changes/YYYY-MM-DD-<topic>.md 执行变更。
 ```
 
 ---
@@ -87,7 +87,7 @@ Change Record 已生成：docs/changes/YYYY-MM-DD-<topic>.md
 
 ---
 
-## L2 执行规则
+## fix 执行规则
 
 执行变更时必须遵守：
 1. 严格按 Scope 修改代码

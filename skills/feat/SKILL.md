@@ -1,17 +1,17 @@
 ---
-name: l3
-description: L3 变更流程编排。执行需求探索、设计方案讨论、文档生成。
+name: feat
+description: feat 流程编排。执行需求探索、设计方案讨论、文档生成。
 ---
 
-# L3 变更流程编排（L3）
+# feat 流程编排（feat）
 
-本技能负责编排 L3 变更的完整流程。
+本技能负责编排 feat 级别变更的完整流程。
 
 ---
 
-## L3 变更适用范围
+## feat 变更适用范围
 
-L3 变更满足以下任一条件：
+feat 变更满足以下任一条件：
 - 新功能开发
 - 公共接口变更
 - 默认值或配置语义变更
@@ -106,7 +106,7 @@ L3 变更满足以下任一条件：
 - docs/spec/<feature>.spec.md
 - docs/tasks/<feature>.tasks.md
 
-请使用 /execute l3 <feature>:1 开始执行。
+请使用 /execute feat <feature>:1 开始执行。
 ```
 
 ---
@@ -121,7 +121,7 @@ L3 变更满足以下任一条件：
 
 ---
 
-## L3 执行规则
+## feat 执行规则
 
 执行变更时必须遵守：
 1. 只实现指定 Task

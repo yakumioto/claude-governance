@@ -21,12 +21,12 @@
    ```
    "检测到操作受保护目录（docs/spec/、docs/tasks/、docs/changes/）。
 
-   治理文档必须通过 L2/L3 流程操作。
+   治理文档必须通过 fix/feat 流程操作。
 
    请使用：
    - /classify <你的需求> — 判断变更级别
-   - /l2 <你的需求> — L2 变更
-   - /l3 <你的需求> — L3 变更"
+   - /fix <你的需求> — 小变更/修复
+   - /feat <你的需求> — 功能开发"
    ```
 
 3. **如果不涉及**
@@ -38,15 +38,15 @@
 
 | 目录 | 说明 | 创建权限 | 更新权限 | 删除权限 |
 |------|------|----------|----------|----------|
-| `docs/spec/` | 设计基准 | L3 | 禁止 | 禁止 |
-| `docs/tasks/` | 执行记录 | L3 | execute (ER) | 禁止 |
-| `docs/changes/` | 变更历史 | L2 | execute (ER) | 禁止 |
+| `docs/spec/` | 设计基准 | feat | 禁止 | 禁止 |
+| `docs/tasks/` | 执行记录 | feat | execute (ER) | 禁止 |
+| `docs/changes/` | 变更历史 | fix | execute (ER) | 禁止 |
 
 **注：** ER = Execution Record（执行记录）
 
 **规则：**
 - ❌ 用户直接创建、修改、删除
-- ✅ L2/L3 流程创建
+- ✅ fix/feat 流程创建
 - ✅ execute 更新 Execution Record
 
 ---
@@ -61,9 +61,9 @@
 /classify <需求描述>
     ↓
 ┌─────────┬──────────┬─────────────────────────────────┐
-│   L1    │    L2    │            L3                   │
+│  Docs   │   fix    │            feat                 │
 ├─────────┼──────────┼─────────────────────────────────┤
-│直接对话  │ /l2      │ /l3                            │
+│直接对话  │ /fix     │ /feat                          │
 │         │   ↓      │   ↓                           │
 │         │ /explore │ /explore → /design             │
 │         │   ↓      │   ↓                           │
@@ -73,19 +73,19 @@
 └─────────┴──────────┴─────────────────────────────────┘
 ```
 
-**禁止在直接对话模式下执行 L2/L3 变更。**
+**禁止在直接对话模式下执行 fix/feat 变更。**
 
-如果用户在直接对话中提出 L2/L3 需求，必须拒绝执行并引导用户：
+如果用户在直接对话中提出 fix/feat 需求，必须拒绝执行并引导用户：
 
 ```
-这是一个 L2/L3 变更。请使用 /classify <需求描述> 判断变更级别。
+这是一个 fix/feat 变更。请使用 /classify <需求描述> 判断变更级别。
 ```
 
 ---
 
 ## 变更级别说明
 
-### L1 — Docs / Trivial Changes
+### Docs — Docs / Trivial Changes
 
 满足以下**全部**条件：
 
@@ -111,18 +111,18 @@ Verify:
 
 ---
 
-### L2 — Tiny / Controlled Changes
+### fix — Tiny / Controlled Changes
 
-满足以下**任一**条件，且**不涉及** L3 触发条件：
+满足以下**任一**条件，且**不涉及** feat 触发条件：
 
 - 小 bug 修复
 - typo 修复
 - 单文件逻辑修正
 - 内部实现优化（不改变接口与语义）
 
-**处理方式：** `/l2 <需求描述>`
+**处理方式：** `/fix <需求描述>`
 
-**执行流程：** explore → doc-gen:change → execute l2
+**执行流程：** explore → doc-gen:change → execute fix
 
 **产出物：** `docs/changes/YYYY-MM-DD-<topic>.md`
 
@@ -134,7 +134,7 @@ Verify:
 
 ---
 
-### L3 — Full Feature Changes
+### feat — Full Feature Changes
 
 满足以下**任一**条件：
 
@@ -146,9 +146,9 @@ Verify:
 - 架构调整
 - 安全 / 加密 / 账务相关变更
 
-**处理方式：** `/l3 <需求描述>`
+**处理方式：** `/feat <需求描述>`
 
-**执行流程：** explore → design → doc-gen:spec/tasks → execute l3
+**执行流程：** explore → design → doc-gen:spec/tasks → execute feat
 
 **产出物：**
 - `docs/plans/YYYY-MM-DD-<topic>-design.md`
@@ -175,16 +175,16 @@ Verify:
    "检测到目标路径 {path} 位于受保护目录。
 
    治理文档只能由以下方式操作：
-   - 创建：L2/L3 流程
+   - 创建：fix/feat 流程
    - 更新：仅限 execute 更新 Execution Record
 
    如果需要修改设计内容，请使用：
-   - /l2 <你的需求> — 补充说明
-   - /l3 <你的需求> — 设计变更
+   - /fix <你的需求> — 补充说明
+   - /feat <你的需求> — 设计变更
 
    如果是执行任务，请使用：
-   - /execute l2 <file> — L2 执行
-   - /execute l3 <task-id> — L3 执行"
+   - /execute fix <file> — fix 执行
+   - /execute feat <task-id> — feat 执行"
    ```
 
 3. **如果目标路径不在受保护目录**
@@ -206,9 +206,9 @@ Read 操作不受此限制：
 
 | 目录 | 说明 | 创建权限 | 更新权限 | 删除权限 |
 |------|------|----------|----------|----------|
-| `docs/spec/` | 设计基准 | L3 流程 | 禁止 | 禁止 |
-| `docs/tasks/` | 执行记录 | L3 流程 | execute (ER) | 禁止 |
-| `docs/changes/` | 变更历史 | L2 流程 | execute (ER) | 禁止 |
+| `docs/spec/` | 设计基准 | feat 流程 | 禁止 | 禁止 |
+| `docs/tasks/` | 执行记录 | feat 流程 | execute (ER) | 禁止 |
+| `docs/changes/` | 变更历史 | fix 流程 | execute (ER) | 禁止 |
 
 **注：** ER = Execution Record（执行记录）
 
@@ -217,10 +217,10 @@ Read 操作不受此限制：
 **❌ 禁止操作：**
 - 用户直接创建、修改、删除受保护目录的文件
 
-**✅ L2/L3 创建：**
-- 只能由 L2/L3 流程通过 doc-gen 创建
-- L2 创建 docs/changes/
-- L3 创建 docs/spec/ 和 docs/tasks/
+**✅ fix/feat 创建：**
+- 只能由 fix/feat 流程通过 doc-gen 创建
+- fix 创建 docs/changes/
+- feat 创建 docs/spec/ 和 docs/tasks/
 
 **✅ execute 更新：**
 - 只能由 execute 更新 Execution Record
@@ -235,11 +235,11 @@ Read 操作不受此限制：
 
 ### 入口层
 - `/classify` — 分级判断 + 路由提示
-- `/l1` — L1 约束说明
+- `/docs` — Docs 级别约束说明
 
 ### 编排层
-- `/l2` — L2 流程编排
-- `/l3` — L3 流程编排
+- `/fix` — fix 流程编排
+- `/feat` — feat 流程编排
 
 ### 核心技能层
 - `/explore` — 需求探索与澄清
@@ -247,20 +247,20 @@ Read 操作不受此限制：
 - `/doc-gen` — 文档生成器（change/spec/tasks/design）
 
 ### 执行层
-- `/execute l2 <file>` — 执行 L2 Change
-- `/execute l3 <task-id>` — 执行 L3 Task
+- `/execute fix <file>` — 执行 fix Change
+- `/execute feat <task-id>` — 执行 feat Task
 
 ---
 
 ## Task 完成定义（Definition of Done）
 
-### L2
+### fix
 
 - 代码完成
 - Acceptance 全部执行
 - Change 文件 Execution Record 已更新
 
-### L3
+### feat
 
 - 代码完成
 - 测试更新
