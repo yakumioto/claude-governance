@@ -18,15 +18,23 @@ Claude 技能导向治理框架 - 统一配置与工作流管理，实现可预�
 claude-governance/
 ├── CLAUDE.md               # 全局执行宪法（工作流与变更规范）
 ├── README.md               # 本文档
-└── skills/                 # 技能定义目录
-    ├── explore/            # 需求探索与澄清技能
-    ├── design/             # 设计方案讨论技能
-    ├── doc-gen/            # 文档生成器技能
-    ├── execute/            # 执行器技能
-    ├── commit/             # Git 提交技能
-    ├── docs/               # Docs 级别约束说明技能
-    ├── fix/                # fix 流程编排技能
-    └── feat/               # feat 流程编排技能
+├── skills/                 # 技能定义目录
+│   ├── explore/            # 需求探索与澄清技能
+│   ├── design/             # 设计方案讨论技能
+│   ├── doc-gen/            # 文档生成器技能
+│   ├── execute/            # 执行器技能
+│   ├── memory/             # 记忆技能
+│   ├── commit/             # Git 提交技能
+│   ├── docs/               # Docs 级别约束说明技能
+│   ├── fix/                # fix 流程编排技能
+│   └── feat/               # feat 流程编排技能
+└── docs/
+    ├── spec/               # 设计基准
+    ├── tasks/              # 执行记录
+    ├── changes/            # 变更历史
+    ├── plans/              # 设计文档
+    └── memories/           # 项目记忆
+        └── memory.md       # 项目记忆文件
 ```
 
 ---
@@ -90,6 +98,7 @@ claude-governance/
 | **explore** | `/explore <需求>` | 需求探索与澄清 |
 | **design** | `/design` | 设计方案讨论 |
 | **doc-gen** | `/doc-gen <type>` | 生成治理文档 |
+| **memory** | `/memory [文件路径...]` | 生成/更新项目记忆文件 |
 | **commit** | `/commit` | 自动生成提交信息 |
 
 ### 执行层
@@ -169,6 +178,39 @@ claude-governance/
 - Acceptance 全部执行
 - Task Execution Record 已填写
 - Timeline 已更新
+
+---
+
+## 项目记忆（Memory）
+
+为了解决项目过大导致的上下文不足问题，框架提供了项目记忆机制。
+
+### memory skill
+
+**调用方式：**
+
+```bash
+# 单个文件
+/memory docs/spec/xxx.spec.md
+/memory docs/tasks/xxx.tasks.md
+/memory docs/changes/xxx.md
+
+# 多个文件
+/memory docs/spec/xxx.spec.md docs/tasks/xxx.tasks.md
+/memory docs/spec/xxx.spec.md docs/tasks/xxx.tasks.md docs/plans/xxx-design.md
+
+# 首次初始化
+/memory
+```
+
+**memory.md 内容：**
+- 项目概述
+- 架构要点
+- 已完成功能列表
+- 关键决策记录
+- 文件索引（spec/tasks/changes/plans）
+
+新会话开始时，可以通过读取 `docs/memories/memory.md` 快速恢复项目上下文。
 
 ---
 

@@ -50,6 +50,17 @@
 
 ---
 
+**注意：** 最后一个 task 的 Acceptance 中应包含：
+
+```markdown
+- 调用 /memory 更新项目记忆
+  ```bash
+  /memory docs/spec/<feature>.spec.md docs/tasks/<feature>.tasks.md
+  ```
+```
+
+---
+
 ### Execution Record（执行记录）
 
 Executor: Claude Code  

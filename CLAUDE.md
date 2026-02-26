@@ -277,6 +277,8 @@ Read 操作不受此限制：
 - `/explore` — 需求探索与澄清
 - `/design` — 设计方案讨论
 - `/doc-gen` — 文档生成器（change/spec/tasks/design）
+- `/memory` — 生成/更新项目记忆文件（支持直接文件路径）
+- `/commit` — 自动生成提交信息
 
 ### 执行层
 - `/execute fix <file>` — 执行 fix Change
