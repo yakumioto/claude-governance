@@ -105,6 +105,11 @@ Claude Governance Framework - 技能导向治理框架，统一配置与工作�
   - 移动 skill 文件到 skills/project-memory/SKILL.md
   - 更新 CLAUDE.md、README.md、execute skill、doc-gen 模板中的引用
 
+- **execute-skill-file-scope-limit** - Execute Skill 文件修改范围限制
+  - 在 fix 执行流程中添加文件修改范围检查步骤
+  - 在 feat 执行流程中添加文件修改范围检查步骤
+  - 明确禁止修改其他治理文档，避免污染历史记录
+
 ---
 
 ## 关键决策记录
@@ -116,6 +121,7 @@ Claude Governance Framework - 技能导向治理框架，统一配置与工作�
 - **context-memory** - 更新而非追加，支持项目重构场景
 - **memory-params** - 简化 memory skill 参数为直接文件路径，提升易用性和灵活性
 - **memory-skill-rename** - 将 /memory 重命名为 /project-memory，避免与 Claude Code 内置命令冲突
+- **execute-skill-file-scope-limit** - Execute skill 增加文件修改范围检查，避免污染治理历史记录
 
 ---
 
@@ -141,6 +147,7 @@ Claude Governance Framework - 技能导向治理框架，统一配置与工作�
 | docs/tasks/memory-params.tasks.md | tasks | Memory Skill 参数简化任务执行记录（6个任务全部完成） |
 | docs/changes/2026-02-26-tasks-template-summary.md | changes | tasks 模板表格列名调整：执行者改为摘要 |
 | docs/changes/2026-02-27-memory-skill-rename.md | changes | memory Skill 重命名 - 将 /memory 改为 /project-memory 避免与 Claude Code 内置命令冲突 |
+| docs/changes/2026-02-27-execute-skill-file-scope-limit.md | changes | Execute Skill 增加文件修改范围限制 - 避免污染治理历史记录 |
 | docs/plans/2026-02-26-context-memory-design.md | design | 上下文记忆机制设计文档 |
 | docs/plans/2026-02-26-memory-params-design.md | design | Memory Skill 参数简化设计文档 |
 

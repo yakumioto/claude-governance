@@ -49,26 +49,42 @@ description: 执行器。根据参数类型执行 fix Change 或 feat Task。doc
    - 定位：Scope、Acceptance、Execution Record 区块
    - 若缺少任一区块 → 停止
 
-2. **执行变更**
+2. **文件修改范围检查**
+   - 输入文件即为允许修改的唯一文件
+   - 验证修改是否超出输入文件范围
+   - 若超出范围 → 拒绝执行并提示错误
+
+3. **执行变更**
    - 严格按照 Scope 修改代码
+   - 仅允许修改输入的治理文件 md 及非治理文档文件
+   - 禁止修改其他任何治理文档（docs/spec/、docs/plans/、docs/tasks/、docs/changes/ 中非输入的文件）
    - 禁止修改未声明模块
    - 禁止新增依赖
    - 禁止修改接口或默认值
    - 禁止顺手重构
 
-3. **运行验收**
+4. **运行验收**
    - 运行 Acceptance 中的全部命令
 
-4. **更新记录**
+5. **更新记录**
    - 将以下内容写入 Change 文件中的 Execution Record：
      - Commands Run
      - Result（PASS / FAIL）
      - Output Summary
    - 若 Result 为 FAIL，必须记录原因
 
+6. **完成提示**
+   - 提示用户调用 `/project-memory` 更新项目记忆：
+     ```
+     建议调用 /project-memory 更新项目记忆：
+     ```bash
+     /project-memory docs/changes/<date>-<topic>.md
+     ```
+     ```
+
 ### fix 禁止操作
 
-- 修改治理文档（docs/spec/、docs/tasks/）
+- 修改输入文件之外的任何治理文档（docs/spec/、docs/plans/、docs/tasks/、docs/changes/）
 - 超出 Scope 的修改
 - 新增或修改依赖
 
@@ -90,20 +106,27 @@ description: 执行器。根据参数类型执行 fix Change 或 feat Task。doc
    - 定位指定 Task 区块：Scope、Acceptance、Execution Record
    - 若不存在 → 停止
 
-2. **执行变更**
+2. **文件修改范围检查**
+   - 提取该 Task 关联的 spec/design 文件（从 Scope 或描述中识别）
+   - 验证修改是否在关联的 spec/design 范围内
+   - 若修改其他治理文档 → 拒绝执行并提示错误
+
+3. **执行变更**
    - 只实现指定 Task
    - 严格按照 Scope 修改代码
+   - 仅允许修改关联的 spec/design 文件及非治理文档文件
+   - 禁止修改其他任何治理文档（docs/spec/、docs/plans/、docs/tasks/、docs/changes/ 中非关联的文件）
    - 禁止提前实现后续 Tasks
    - 不修改依赖文件（除非 Task 明确允许）
    - 禁止顺手重构
 
-3. **补充测试**
+4. **补充测试**
    - 补充或更新测试
 
-4. **运行验收**
+5. **运行验收**
    - 运行 Acceptance 中的所有命令
 
-5. **更新记录**
+6. **更新记录**
    - 写入 Execution Record：
      - Commands Run
      - Result
@@ -121,6 +144,7 @@ description: 执行器。根据参数类型执行 fix Change 或 feat Task。doc
 
 ### feat 禁止操作
 
+- 修改关联文件之外的任何治理文档（docs/spec/、docs/plans/、docs/tasks/、docs/changes/）
 - 超出 Scope 的修改
 - 提前实现后续 Tasks
 - 顺手重构
