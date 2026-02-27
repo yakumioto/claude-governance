@@ -1,4 +1,4 @@
-# Memory Skill
+# Project Memory Skill
 
 为治理框架生成/更新项目记忆文件，解决项目过大导致的上下文不足问题。
 
@@ -8,16 +8,16 @@
 
 ```bash
 # 单个文件
-/memory docs/spec/xxx.spec.md
-/memory docs/tasks/xxx.tasks.md
-/memory docs/changes/xxx.md
+/project-memory docs/spec/xxx.spec.md
+/project-memory docs/tasks/xxx.tasks.md
+/project-memory docs/changes/xxx.md
 
 # 多个文件
-/memory docs/spec/xxx.spec.md docs/tasks/xxx.tasks.md
-/memory docs/spec/xxx.spec.md docs/tasks/xxx.tasks.md docs/plans/xxx-design.md
+/project-memory docs/spec/xxx.spec.md docs/tasks/xxx.tasks.md
+/project-memory docs/spec/xxx.spec.md docs/tasks/xxx.tasks.md docs/plans/xxx-design.md
 
 # 首次初始化（无参数）
-/memory
+/project-memory
 ```
 
 ---
@@ -75,7 +75,7 @@ def identify_file_type(path):
 - 扫描 `docs/plans/` 目录
 
 **增量更新（有参数）：**
-- 读取现有 `docs/memories/memory.md`（如存在）
+- 读取现有 `docs/memories/project-memory.md`（如存在）
 - 遍历传入的文件路径
 - 读取每个传入的文件
 - 验证传入的文件是否存在，不存在时报错并终止
@@ -144,7 +144,7 @@ def identify_file_type(path):
 | 传入的文件解析失败 | 报错并终止：<br>`错误：文件解析失败<br>文件：<path><br>建议：检查文件格式是否正确` |
 | 无法识别文件类型 | 警告但继续，仅更新文件索引 |
 | memory.md 读取失败 | 报错但尝试生成新文件 |
-| memory.md 写入失败 | 报错并保留原文件（如有）：<br>`错误：写入失败<br>文件：docs/memories/memory.md<br>建议：检查目录权限` |
+| memory.md 写入失败 | 报错并保留原文件（如有）：<br>`错误：写入失败<br>文件：docs/memories/project-memory.md<br>建议：检查目录权限` |
 | 无参数且目录无文件 | 生成空的 memory.md 模板 |
 
 ---
@@ -158,9 +158,9 @@ def identify_file_type(path):
 
 - [ ] 代码完成
 - [ ] 测试通过
-- [ ] 调用 /memory 更新项目记忆
+- [ ] 调用 /project-memory 更新项目记忆
   ```bash
-  /memory docs/spec/<feature>.spec.md docs/tasks/<feature>.tasks.md
+  /project-memory docs/spec/<feature>.spec.md docs/tasks/<feature>.tasks.md
   ```
 ```
 
@@ -171,16 +171,16 @@ def identify_file_type(path):
 
 - [ ] 代码完成
 - [ ] 验收通过
-- [ ] 调用 /memory 更新项目记忆（文件索引）
+- [ ] 调用 /project-memory 更新项目记忆（文件索引）
   ```bash
-  /memory docs/changes/<date>-<topic>.md
+  /project-memory docs/changes/<date>-<topic>.md
   ```
 ```
 
 ### 示例 3：首次初始化
 
 ```bash
-/memory
+/project-memory
 ```
 
 ---

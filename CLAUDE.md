@@ -43,7 +43,7 @@
 2. **如果需要读取 memory**
    - 检查 `docs/memories/memory.md` 是否存在
    - 如果存在，读取该文件恢复项目上下文
-   - 如果不存在，可使用 `/memory` 初始化项目记忆
+   - 如果不存在，可使用 `/project-memory` 初始化项目记忆
 
 3. **明确项目结构后的优势**
    - 减少探索阶段的重复工作
@@ -296,7 +296,7 @@ Read 操作不受此限制：
 - `/explore` — 需求探索与澄清
 - `/design` — 设计方案讨论
 - `/doc-gen` — 文档生成器（change/spec/tasks/design）
-- `/memory` — 生成/更新项目记忆文件（支持直接文件路径）
+- `/project-memory` — 生成/更新项目记忆文件（支持直接文件路径）
 - `/commit` — 自动生成提交信息
 
 ### 执行层

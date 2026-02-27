@@ -27,7 +27,7 @@ Claude Governance Framework - 技能导向治理框架，统一配置与工作�
   ├── /explore
   ├── /design
   ├── /doc-gen     # change / spec / tasks / design
-  ├── /memory      # 上下文记忆机制（支持直接文件路径）
+  ├── /project-memory      # 上下文记忆机制（支持直接文件路径）
   └── /commit
 
 执行层
@@ -91,7 +91,7 @@ Claude Governance Framework - 技能导向治理框架，统一配置与工作�
   - 新增 memory skill（方案 B），职责单一、灵活易测试
   - 使用单一 memory.md 文件，简化维护
   - 更新而非追加，支持项目重构场景
-  - 在最后一个 task Acceptance 中自动提示调用 /memory
+  - 在最后一个 task Acceptance 中自动提示调用 /project-memory
 
 - **memory-params** - Memory Skill 参数简化
   - 简化 memory skill 参数设计，改为直接接受文件路径
@@ -99,6 +99,11 @@ Claude Governance Framework - 技能导向治理框架，统一配置与工作�
   - 根据路径中的目录名称自动识别文件类型（spec/tasks/changes/plans）
   - 更新 doc-gen 的 tasks 和 change 模板，添加 memory 调用说明
   - 更新 README.md 和 CLAUDE.md 中的 memory skill 说明
+
+- **memory-skill-rename** - memory Skill 重命名
+  - 将 /memory 重命名为 /project-memory，避免与 Claude Code 内置命令冲突
+  - 移动 skill 文件到 skills/project-memory/SKILL.md
+  - 更新 CLAUDE.md、README.md、execute skill、doc-gen 模板中的引用
 
 ---
 
@@ -110,6 +115,7 @@ Claude Governance Framework - 技能导向治理框架，统一配置与工作�
 - **context-memory** - 使用单一 memory.md 文件，简化维护
 - **context-memory** - 更新而非追加，支持项目重构场景
 - **memory-params** - 简化 memory skill 参数为直接文件路径，提升易用性和灵活性
+- **memory-skill-rename** - 将 /memory 重命名为 /project-memory，避免与 Claude Code 内置命令冲突
 
 ---
 
@@ -134,9 +140,10 @@ Claude Governance Framework - 技能导向治理框架，统一配置与工作�
 | docs/tasks/context-memory.tasks.md | tasks | 上下文记忆机制任务执行记录（7个任务全部完成） |
 | docs/tasks/memory-params.tasks.md | tasks | Memory Skill 参数简化任务执行记录（6个任务全部完成） |
 | docs/changes/2026-02-26-tasks-template-summary.md | changes | tasks 模板表格列名调整：执行者改为摘要 |
+| docs/changes/2026-02-27-memory-skill-rename.md | changes | memory Skill 重命名 - 将 /memory 改为 /project-memory 避免与 Claude Code 内置命令冲突 |
 | docs/plans/2026-02-26-context-memory-design.md | design | 上下文记忆机制设计文档 |
 | docs/plans/2026-02-26-memory-params-design.md | design | Memory Skill 参数简化设计文档 |
 
 ---
 
-**最后更新：** 2026-02-26
+**最后更新：** 2026-02-27

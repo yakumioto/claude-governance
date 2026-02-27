@@ -98,7 +98,7 @@ claude-governance/
 | **explore** | `/explore <需求>` | 需求探索与澄清 |
 | **design** | `/design` | 设计方案讨论 |
 | **doc-gen** | `/doc-gen <type>` | 生成治理文档 |
-| **memory** | `/memory [文件路径...]` | 生成/更新项目记忆文件 |
+| **project-memory** | `/project-memory [文件路径...]` | 生成/更新项目记忆文件 |
 | **commit** | `/commit` | 自动生成提交信息 |
 
 ### 执行层
@@ -185,22 +185,22 @@ claude-governance/
 
 为了解决项目过大导致的上下文不足问题，框架提供了项目记忆机制。
 
-### memory skill
+### project-memory skill
 
 **调用方式：**
 
 ```bash
 # 单个文件
-/memory docs/spec/xxx.spec.md
-/memory docs/tasks/xxx.tasks.md
-/memory docs/changes/xxx.md
+/project-memory docs/spec/xxx.spec.md
+/project-memory docs/tasks/xxx.tasks.md
+/project-memory docs/changes/xxx.md
 
 # 多个文件
-/memory docs/spec/xxx.spec.md docs/tasks/xxx.tasks.md
-/memory docs/spec/xxx.spec.md docs/tasks/xxx.tasks.md docs/plans/xxx-design.md
+/project-memory docs/spec/xxx.spec.md docs/tasks/xxx.tasks.md
+/project-memory docs/spec/xxx.spec.md docs/tasks/xxx.tasks.md docs/plans/xxx-design.md
 
 # 首次初始化
-/memory
+/project-memory
 ```
 
 **memory.md 内容：**

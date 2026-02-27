@@ -53,9 +53,9 @@
 **注意：** 最后一个 task 的 Acceptance 中应包含：
 
 ```markdown
-- 调用 /memory 更新项目记忆
+- 调用 /project-memory 更新项目记忆
   ```bash
-  /memory docs/spec/<feature>.spec.md docs/tasks/<feature>.tasks.md
+  /project-memory docs/spec/<feature>.spec.md docs/tasks/<feature>.tasks.md
   ```
 ```
 

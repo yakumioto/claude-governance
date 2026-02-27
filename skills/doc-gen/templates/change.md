@@ -36,9 +36,9 @@
 **注意：** Acceptance 中应包含：
 
 ```markdown
-- 调用 /memory 更新项目记忆（文件索引）
+- 调用 /project-memory 更新项目记忆（文件索引）
   ```bash
-  /memory docs/changes/<date>-<topic>.md
+  /project-memory docs/changes/<date>-<topic>.md
   ```
 ```
 

@@ -111,11 +111,11 @@ description: 执行器。根据参数类型执行 fix Change 或 feat Task。doc
    - 更新 Execution Timeline 表格
 
 6. **完成提示**
-   - 如果是最后一个 task，提示用户调用 `/memory` 更新项目记忆：
+   - 如果是最后一个 task，提示用户调用 `/project-memory` 更新项目记忆：
      ```
-     最后一个 task 已完成。建议调用 /memory 更新项目记忆：
+     最后一个 task 已完成。建议调用 /project-memory 更新项目记忆：
      ```bash
-     /memory --tasks docs/tasks/<feature>.tasks.md --spec docs/spec/<feature>.spec.md
+     /project-memory docs/tasks/<feature>.tasks.md docs/spec/<feature>.spec.md
      ```
      ```
 
